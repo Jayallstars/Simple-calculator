@@ -1,88 +1,130 @@
-import java.awt.event.*;
 import java.awt.*;
+import java.awt.event.*;
+import java.lang.ref.Cleaner;
+import java.util.Arrays;
 import javax.swing.*;
 
 public class JavaCalculator extends JFrame implements ActionListener {
-        JButton b10, b11, b12, b13, b14, b15;
+        JButton btnplus, btnsub, btnmul, btndiv, btnequals, btnclear,
+        btnmod, btnpercent, btnpow, btndel, btnpos, btnneg;
         JButton b[] = new JButton[10];
-        int i, r, n1, n2;
+        float n1, n2, r;
+        int i ,n3;
         JTextField numberField;
-        char op;
+        String op,store;
         JFrame window;
 
         public JavaCalculator() {
-                super("JavaCalulator");
-                setLayout(new FlowLayout());
-                JPanel p = new JPanel();
-                p.setLayout(new GridLayout(4, 4));
+                window = new JFrame("Java Calculator");
                 Container container = window.getContentPane();
+                container.setLayout(new FlowLayout());
+                numberField = new JTextField(25);
+                container.add(numberField);
                 for (int i = 0; i <= 9; i++) {
                         b[i] = new JButton(i + "");
-                        p.add(b[i]);
+                        container.add(b[i]);
                         b[i].addActionListener(this);
                 }
-                numberField = new JTextField(10);
-                b10 = new JButton("+");
-                container.add(b10);
-                b10.addActionListener(this);
+                btnplus = new JButton("+");
+                container.add(btnplus);
+                btnplus.addActionListener(this);
 
-                b11 = new JButton("-");
-                container.add(b11);
-                b11.addActionListener(this);
+                btnsub = new JButton("-");
+                container.add(btnsub);
+                btnsub.addActionListener(this);
 
-                b12 = new JButton("*");
-                p.add(b12);
-                b12.addActionListener(this);
+                btnmul = new JButton("*");
+                container.add(btnmul);
+                btnmul.addActionListener(this);
 
-                b13 = new JButton("/");
-                p.add(b13);
-                b13.addActionListener(this);
+                btndiv = new JButton("/");
+                container.add(btndiv);
+                btndiv.addActionListener(this);
 
-                b14 = new JButton("=");
-                p.add(b14);
-                b14.addActionListener(this);
+                btnmod = new JButton("mod");
+                container.add(btnmod);
+                btnmod.addActionListener(this);
 
-                b15 = new JButton("C");
-                p.add(b15);
-                b15.addActionListener(this);
+                btnpercent = new JButton("%");
+                container.add(btnpercent);
+                btnpercent.addActionListener(this);
 
-                add(p, BorderLayout.CENTER);
-                add(numberField, BorderLayout.NORTH);
-                setSize(250, 340);
-                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                setVisible(true);
+                btnpow = new JButton("x^y");
+                container.add(btnpow);
+                btnpow.addActionListener(this);
+
+                btnpos = new JButton("-/+");
+                container.add(btnpos);
+                btnpos.addActionListener(this);
+
+                btndel = new JButton("Del");
+                container.add(btndel);
+                btndel.addActionListener(this);
+
+                btnequals = new JButton("=");
+                container.add(btnequals);
+                btnequals.addActionListener(this);
+
+                btnclear = new JButton("C");
+                container.add(btnclear);
+                btnclear.addActionListener(this);
+
+                window.setSize(300, 300);
+                window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                window.setVisible(true);
         }
 
         public void actionPerformed(ActionEvent ae) {
                 JButton pb = (JButton) ae.getSource();
-                if (pb == b15) {
+                if (pb == btnclear) {
                         r = n1 = n2 = 0;
                         numberField.setText("");
-                } else if (pb == b14) {
+                } else if (pb == btnequals) {
                         n2 = Integer.parseInt(numberField.getText());
                         eval();
                         numberField.setText("" + r);
+                } else if (pb == btnpercent){
+                        n1 = Float.parseFloat(numberField.getText());
+                        n1 = n1 / 100;
+                        numberField.setText(String.valueOf(n1));
+                } else if (pb == btnpos){
+                        n1 = Integer.parseInt(numberField.getText());
+                        numberField.setText("-" + String.valueOf(n1));
+                } else if (pb == btndel){
+                        n3 = Integer.parseInt(numberField.getText());
+                        store = Integer.toString(n3);
+                        char [] arr = store.toCharArray();
+                        arr = Arrays.copyOf(arr, arr.length - 1);
+                        store = String.valueOf(arr);
+                        numberField.setText(store);
                 }
 
                 else {
                         boolean opf = false;
-                        if (pb == b10) {
-                                op = '+';
+                        if (pb == btnplus) {
+                                op = "+";
                                 opf = true;
                         }
-                        if (pb == b11) {
-                                op = '-';
+                        if (pb == btnsub) {
+                                op = "-";
                                 opf = true;
                         }
-                        if (pb == b12) {
-                                op = '*';
+                        if (pb == btnmul) {
+                                op = "*";
                                 opf = true;
                         }
-                        if (pb == b13) {
-                                op = '/';
+                        if (pb == btndiv) {
+                                op = "/";
                                 opf = true;
                         }
-
+                        if (pb == btnmod){
+                                op = "%";
+                                opf = true;
+                        }
+                        if (pb == btnpow){
+                                op = "pow";
+                                opf = true;
+                        }
                         if (opf == false) {
                                 for (i = 0; i < 10; i++) {
                                         if (pb == b[i]) {
@@ -100,19 +142,24 @@ public class JavaCalculator extends JFrame implements ActionListener {
 
         int eval() {
                 switch (op) {
-                        case '+':
+                        case "+":
                                 r = n1 + n2;
                                 break;
-                        case '-':
+                        case "-":
                                 r = n1 - n2;
                                 break;
-                        case '*':
+                        case "*":
                                 r = n1 * n2;
                                 break;
-                        case '/':
+                        case "/":
                                 r = n1 / n2;
                                 break;
-
+                        case "%":
+                                r = n1 % n2;
+                                break;
+                        case "pow":
+                                r = (float) Math.pow(n1, n2);
+                                break;
                 }
                 return 0;
         }
